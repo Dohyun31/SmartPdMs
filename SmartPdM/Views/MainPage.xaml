@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SmartPdM.ViewModels"
              x:Class="SmartPdM.App.Views.MainPage"
-             Title="시작합니다.">
+             Title="SmartPdm">
 
     <!-- 뷰모델 바인딩 -->
     <ContentPage.BindingContext>
@@ -78,7 +78,7 @@
                         <Label Text="설비 반복 정밀도 감시" Style="{StaticResource CardTitle}"/>
                         <Label Text="로봇 좌표/위치 정밀도 실시간 모니터링" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
-                                Text="열기"
+                                Text="Check"
                                 Command="{Binding OpenRepeatPrecisionCommand}"/>
                     </VerticalStackLayout>
                 </Frame>
@@ -89,7 +89,7 @@
                         <Label Text="체결 공정 건전성 관리" Style="{StaticResource CardTitle}"/>
                         <Label Text="스크류 토크 패턴 분석/모니터링" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
-                                Text="열기"
+                                Text="Check"
                                 Command="{Binding OpenScrewHealthCommand}"/>
                     </VerticalStackLayout>
                 </Frame>
@@ -100,7 +100,7 @@
                         <Label Text="소모품 관리" Style="{StaticResource CardTitle}"/>
                         <Label Text="Probe Pin 사용량 추적 &amp; 교체 시기 예측" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
-                                Text="열기"
+                                Text="Check"
                                 Command="{Binding OpenConsumablesCommand}"/>
                     </VerticalStackLayout>
                 </Frame>
@@ -108,17 +108,18 @@
                 <!-- 4. 데이터 인프라 & 사용자 시스템 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="1" Grid.Column="1">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="데이터 인프라 &amp; 사용자 시스템" Style="{StaticResource CardTitle}"/>
-                        <Label Text="데이터 파이프라인/알림/통합 플랫폼" FontSize="13" TextColor="#888"/>
+                        <Label Text="데이터 사용자 시스템" Style="{StaticResource CardTitle}"/>
+                        <Label Text="데이터 알림/통합 플랫폼" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
-                                Text="열기"
-                                Command="{Binding OpenInfraPlatformCommand}"/>
+                            Text="Check"
+                            Command="{Binding GoToSpecCommand}" />
+
                     </VerticalStackLayout>
                 </Frame>
             </Grid>
 
             <!-- 기존 영역 (새로고침/목록) -->
-            <Button Text="새로고침" Command="{Binding RefreshCommand}" />
+            <Button Text="Data Refresh" Command="{Binding RefreshCommand}" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
             <CollectionView ItemsSource="{Binding Items}">

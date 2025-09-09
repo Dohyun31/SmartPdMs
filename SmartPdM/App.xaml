@@ -5,6 +5,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 x:Class="SmartPdM.MyApp">
     <Application.Resources>
         <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBool" />
             <converters:BoolToTextConverter x:Key="BoolToText"/>
             <Style TargetType="Label">
                 <Setter Property="FontSize" Value="14" />

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
+             x:Class="SmartPdM.App.Views.SignUpPage"
+             Title="회원 가입">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+            <Label Text="SmartPdM 계정 만들기" FontSize="22" FontAttributes="Bold" />
+            <Entry Placeholder="이메일" Text="{Binding Email}" Keyboard="Email"/>
+            <Entry Placeholder="표시 이름" Text="{Binding DisplayName}" />
+            <Entry Placeholder="비밀번호" Text="{Binding Password}" IsPassword="True"/>
+            <Button Text="가입" Command="{Binding SignUpAsyncCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="{Binding Error}" TextColor="Red" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

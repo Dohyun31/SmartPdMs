@@ -1,12 +1,84 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
              x:Class="SmartPdM.App.Views.ScrewHealthPage"
              Title="체결 공정 건전성 관리">
+
+    <ContentPage.BindingContext>
+        <vm:ScrewHealthViewModel/>
+    </ContentPage.BindingContext>
+
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
-            <Label Text="체결 공정 건전성 관리" FontSize="22" FontAttributes="Bold"/>
-            <Label Text="토크/각도 패턴 분석 화면(예시 영역)" TextColor="#666"/>
+
+            <!-- 상단 요약 -->
+            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="10">
+                <Frame Padding="10" CornerRadius="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="전체" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding Total}" FontSize="20"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Padding="10" CornerRadius="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="OK" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding OkCount}" FontSize="20" TextColor="Green"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="2" Padding="10" CornerRadius="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="NG" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding NgCount}" FontSize="20" TextColor="Red"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="3" Padding="10" CornerRadius="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="평균피크(N·m)" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding MeanPeak}" FontSize="20"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="4" Padding="10" CornerRadius="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Min/Max" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding MinPeak, StringFormat='{0:F2}'}" FontSize="12"/>
+                        <Label Text="{Binding MaxPeak, StringFormat='{0:F2}'}" FontSize="12"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- 파라미터 -->
+            <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto" ColumnSpacing="8">
+                <Entry Placeholder="Target(N·m)" Keyboard="Numeric" Text="{Binding TargetTorque}"/>
+                <Label Grid.Column="1" VerticalTextAlignment="Center" Text="±"/>
+                <Entry Grid.Column="2" Placeholder="Tol" Keyboard="Numeric" Text="{Binding Tolerance}"/>
+                <Label Grid.Column="3" VerticalTextAlignment="Center" Text="Noise"/>
+                <Entry Grid.Column="4" Placeholder="0~1" Keyboard="Numeric" Text="{Binding Noise}"/>
+                <Button Grid.Column="5" Text="재생성" Command="{Binding RefreshCommand}"/>
+            </Grid>
+
+            <!-- 그래프 -->
+            <Frame Padding="8" CornerRadius="16" HasShadow="True">
+                <GraphicsView x:Name="CurveView" HeightRequest="220"/>
+            </Frame>
+
+            <!-- 최근 싸이클 -->
+            <Frame Padding="8" CornerRadius="16" HasShadow="True">
+                <CollectionView ItemsSource="{Binding Cycles}" SelectionMode="Single"
+                                SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="6" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                <Label Text="{Binding CycleNo}" FontAttributes="Bold"/>
+                                <Label Grid.Column="1" Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}"/>
+                                <Label Grid.Column="2" Text="{Binding PeakTorque, StringFormat='{0:F2} N·m'}"/>
+                                <Label Grid.Column="3" Text="{Binding Judgment}" TextColor="{Binding IsOk, Converter={StaticResource BoolToText}, ConverterParameter='Green|Red'}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

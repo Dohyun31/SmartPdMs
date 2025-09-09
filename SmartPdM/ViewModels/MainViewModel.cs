@@ -3,11 +3,12 @@ using System.Windows.Input;
 using SmartPdM.Models;
 using SmartPdM.Services;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SmartPdM.ViewModels
 {
 
-    public class MainViewModel : BindableObject  // ← public 유지
+    public partial class MainViewModel : BindableObject  // ← public 유지
     {
         public IAsyncRelayCommand OpenRepeatPrecisionCommand { get; }
         public IAsyncRelayCommand OpenScrewHealthCommand { get; }
@@ -35,9 +36,22 @@ namespace SmartPdM.ViewModels
             OpenConsumablesCommand = new AsyncRelayCommand(() =>
                 Shell.Current.GoToAsync(nameof(SmartPdM.App.Views.ConsumablesPage)));
 
+            //OpenInfraPlatformCommand = new AsyncRelayCommand(() =>
+            //    Shell.Current.GoToAsync(nameof(SmartPdM.App.Views.InfraPlatformPage)));
+
             OpenInfraPlatformCommand = new AsyncRelayCommand(() =>
-                Shell.Current.GoToAsync(nameof(SmartPdM.App.Views.InfraPlatformPage)));
+                Shell.Current.GoToAsync(nameof(SmartPdM.App.Views.SpecPage)));
         }
+        [RelayCommand]
+        private Task GoToSpecAsync() => Shell.Current.GoToAsync("Spec");
+
+        [RelayCommand]
+        private async Task GoToSignUpAsync()
+        {
+            // 위에서 등록한 문자열 라우트와 동일해야 합니다!
+            await Shell.Current.GoToAsync("SignUp");
+        }
+
         private async Task OpenRepeatPrecisionAsync()
         {
             // Shell에 등록한 라우트 이름으로 이동

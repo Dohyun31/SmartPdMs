@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
+             x:Class="SmartPdM.App.Views.SpecPage"
+             Title="검사 스펙 / 사용자 시스템">
+
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- 헤더 / 상태 -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Label Text="{Binding Message}" TextColor="#666" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                    <Button Text="새로고침" Command="{Binding LoadAsyncCommand}" />
+                    <Button Text="{Binding IsAdmin, Converter={StaticResource BoolToText}, ConverterParameter='관리자 OFF|관리자 ON'}"
+                  Command="{Binding ToggleAdminAsyncCommand}" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+
+            <!-- 소모품: Probe Pin -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="소모품 관리 (Probe Pin)" FontAttributes="Bold" FontSize="18"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                        <Label Text="최대 수명(회)" />
+                        <Entry Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.ProbePinMaxCycles, Mode=TwoWay}" />
+
+                        <Label Grid.Row="1" Text="경고 임계치(회)" />
+                        <Entry Grid.Row="1" Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.ProbePinWarnCycles, Mode=TwoWay}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 설비 반복 정밀도 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="설비 반복 정밀도" FontAttributes="Bold" FontSize="18"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                        <Label Text="허용 오차 (mm)" />
+                        <Entry Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.RepeatPosToleranceMm, Mode=TwoWay}" />
+
+                        <Label Grid.Row="1" Text="검사 샘플 수" />
+                        <Entry Grid.Row="1" Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.RepeatSamplesPerCheck, Mode=TwoWay}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 체결 공정 건전성 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="체결 공정(토크)" FontAttributes="Bold" FontSize="18"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                        <Label Text="목표 토크 (N·m)" />
+                        <Entry Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.TargetTorqueNm, Mode=TwoWay}" />
+
+                        <Label Grid.Row="1" Text="허용 편차 (±N·m)" />
+                        <Entry Grid.Row="1" Grid.Column="1" Keyboard="Numeric"
+                   IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                   Text="{Binding Spec.TorqueToleranceNm, Mode=TwoWay}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 배경/사유/특이사항 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="사양 배경/불량 원인 기록" FontAttributes="Bold" FontSize="18"/>
+                    <Editor AutoSize="TextChanges" MinimumHeightRequest="100"
+                  IsReadOnly="{Binding IsAdmin, Converter={StaticResource InverseBool}}"
+                  Text="{Binding Spec.Notes, Mode=TwoWay}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 저장/초기화 (관리자 전용) -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Label Text="{Binding IsAdmin, Converter={StaticResource BoolToText}, ConverterParameter='관리자 모드: ON|관리자 모드: OFF'}"
+               VerticalTextAlignment="Center"/>
+                <Button Grid.Column="1" Text="저장" Command="{Binding SaveAsyncCommand}" IsEnabled="{Binding IsAdmin}" />
+                <Button Grid.Column="2" Text="기본값" Command="{Binding ResetAsyncCommand}" IsEnabled="{Binding IsAdmin}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

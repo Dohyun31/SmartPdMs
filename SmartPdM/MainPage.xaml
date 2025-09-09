@@ -23,7 +23,9 @@
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
-
+            <Button Text="회원 가입"
+        Command="{Binding GoToSignUpCommand}" />
+            
             <Button
                 x:Name="CounterBtn"
                 Text="Click me" 

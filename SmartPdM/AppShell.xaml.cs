@@ -8,6 +8,9 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         // 페이지 라우트 등록
+
+        Routing.RegisterRoute("Spec", typeof(SpecPage));
+        Routing.RegisterRoute("SignUp", typeof(SignUpPage));
         Routing.RegisterRoute(nameof(RepeatPrecisionPage), typeof(RepeatPrecisionPage));
         Routing.RegisterRoute(nameof(ScrewHealthPage), typeof(ScrewHealthPage));
         Routing.RegisterRoute(nameof(ConsumablesPage), typeof(ConsumablesPage));
