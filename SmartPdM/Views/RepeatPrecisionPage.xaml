@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
+             x:Class="SmartPdM.App.Views.RepeatPrecisionPage"
+             Title="설비 반복 정밀도 감시">
+
+    <ContentPage.BindingContext>
+        <vm:RepeatPrecisionViewModel/>
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <!-- 통계 카드 -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <!-- Max -->
+                <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Max Δ (mm)" FontAttributes="Bold" FontSize="14"/>
+                        <Label Text="{Binding ErrorMax, StringFormat='{0:F3}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Mean -->
+                <Frame Grid.Column="1" Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Mean Δ (mm)" FontAttributes="Bold" FontSize="14"/>
+                        <Label Text="{Binding ErrorMean, StringFormat='{0:F3}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Sigma -->
+                <Frame Grid.Column="2" Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="σ (mm)" FontAttributes="Bold" FontSize="14"/>
+                        <Label Text="{Binding Sigma, StringFormat='{0:F3}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- 로딩 표시 / 새로고침 -->
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="새로고침" Command="{Binding LoadAsyncCommand}"/>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+                <Label Text="{Binding Count, StringFormat='N={0}'}" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+
+            <!-- 라인 차트 -->
+            <Frame Padding="0" CornerRadius="16" HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}"
+                   HeightRequest="220">
+                <GraphicsView x:Name="Chart" />
+            </Frame>
+
+            <!-- (선택) 원시 데이터 리스트 -->
+            <CollectionView ItemsSource="{Binding Poses}" HeightRequest="320">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnDefinitions="*,*,*,*,*,*">
+                            <Label Grid.Column="0" Text="{Binding Timestamp}" FontSize="12"/>
+                            <Label Grid.Column="1" Text="{Binding X, StringFormat='X={0:F3}'}"/>
+                            <Label Grid.Column="2" Text="{Binding Y, StringFormat='Y={0:F3}'}"/>
+                            <Label Grid.Column="3" Text="{Binding Z, StringFormat='Z={0:F3}'}"/>
+                            <Label Grid.Column="4" Text="{Binding Rx, StringFormat='Rx={0:F3}'}"/>
+                            <Label Grid.Column="5" Text="{Binding Ry, StringFormat='Ry={0:F3}'}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

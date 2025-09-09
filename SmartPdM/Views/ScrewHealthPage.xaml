@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SmartPdM.App.Views.ScrewHealthPage"
+             Title="체결 공정 건전성 관리">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="체결 공정 건전성 관리" FontSize="22" FontAttributes="Bold"/>
+            <Label Text="토크/각도 패턴 분석 화면(예시 영역)" TextColor="#666"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

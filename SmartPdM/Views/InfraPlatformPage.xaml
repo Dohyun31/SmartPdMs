@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SmartPdM.App.Views.InfraPlatformPage"
+             Title="데이터 인프라 &amp; 사용자 시스템">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="데이터 인프라 &amp; 사용자 시스템" FontSize="22" FontAttributes="Bold"/>
+            <Label Text="파이프라인/알림/플랫폼 구성(예시 영역)" TextColor="#666"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

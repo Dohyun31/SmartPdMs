@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
+             x:Class="SmartPdM.App.Views.MainPage"
+             Title="시작합니다.">
+
+    <!-- 뷰모델 바인딩 -->
+    <ContentPage.BindingContext>
+        <vm:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <!-- 카드/버튼 공통 스타일 -->
+    <ContentPage.Resources>
+        <!-- 카드 프레임 -->
+        <Style TargetType="Frame" x:Key="Card">
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="HasShadow" Value="True"/>
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}"/>
+            <Setter Property="BorderColor" Value="{AppThemeBinding Light=#ECECEC, Dark=#2E2E2E}"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <!-- 카드 안의 제목 -->
+        <Style TargetType="Label" x:Key="CardTitle">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=#222, Dark=#EEE}"/>
+        </Style>
+
+        <!-- 카드용 버튼(투명 버튼) -->
+        <Style TargetType="Button" x:Key="CardButton">
+            <Setter Property="BackgroundColor" Value="#512BD4"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="#33000000" Offset="0,6" Radius="12" Opacity="0.6"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <Setter.Value>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#3F22AA"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <!-- 4개 섹션 카드 버튼 -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+
+                <!-- 1. 설비 반복 정밀도 감시 -->
+                <Frame Style="{StaticResource Card}" Grid.Row="0" Grid.Column="0">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="설비 반복 정밀도 감시" Style="{StaticResource CardTitle}"/>
+                        <Label Text="로봇 좌표/위치 정밀도 실시간 모니터링" FontSize="13" TextColor="#888"/>
+                        <Button Style="{StaticResource CardButton}"
+                                Text="열기"
+                                Command="{Binding OpenRepeatPrecisionCommand}"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- 2. 체결 공정 건전성 관리 -->
+                <Frame Style="{StaticResource Card}" Grid.Row="0" Grid.Column="1">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="체결 공정 건전성 관리" Style="{StaticResource CardTitle}"/>
+                        <Label Text="스크류 토크 패턴 분석/모니터링" FontSize="13" TextColor="#888"/>
+                        <Button Style="{StaticResource CardButton}"
+                                Text="열기"
+                                Command="{Binding OpenScrewHealthCommand}"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- 3. 소모품 관리 -->
+                <Frame Style="{StaticResource Card}" Grid.Row="1" Grid.Column="0">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="소모품 관리" Style="{StaticResource CardTitle}"/>
+                        <Label Text="Probe Pin 사용량 추적 &amp; 교체 시기 예측" FontSize="13" TextColor="#888"/>
+                        <Button Style="{StaticResource CardButton}"
+                                Text="열기"
+                                Command="{Binding OpenConsumablesCommand}"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- 4. 데이터 인프라 & 사용자 시스템 -->
+                <Frame Style="{StaticResource Card}" Grid.Row="1" Grid.Column="1">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="데이터 인프라 &amp; 사용자 시스템" Style="{StaticResource CardTitle}"/>
+                        <Label Text="데이터 파이프라인/알림/통합 플랫폼" FontSize="13" TextColor="#888"/>
+                        <Button Style="{StaticResource CardButton}"
+                                Text="열기"
+                                Command="{Binding OpenInfraPlatformCommand}"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- 기존 영역 (새로고침/목록) -->
+            <Button Text="새로고침" Command="{Binding RefreshCommand}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,8" Padding="12" HasShadow="True" CornerRadius="16">
+                            <VerticalStackLayout>
+                                <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,Auto,Auto">
+                                    <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding RobotId}" FontAttributes="Bold" FontSize="16"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Max Δ"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding ErrorMax}" HorizontalTextAlignment="End"/>
+                                    <Label Grid.Row="2" Grid.Column="0" Text="Mean Δ / σ"/>
+                                    <Label Grid.Row="2" Grid.Column="1" 
+                                           Text="{Binding ErrorMean, StringFormat='{0:F3}'}" 
+                                           HorizontalTextAlignment="End"/>
+                                </Grid>
+                                <Label Text="{Binding Summary}" FontSize="13"/>
+                                <Label Text="{Binding Timestamp}" FontSize="12" TextColor="#777"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

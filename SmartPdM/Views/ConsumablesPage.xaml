@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SmartPdM.ViewModels"
+             x:Class="SmartPdM.App.Views.ConsumablesPage"
+             Title="소모품 관리">
+
+    <ContentPage.BindingContext>
+        <vm:ConsumablesViewModel/>
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <!-- 상태 헤더 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <BoxView WidthRequest="14" HeightRequest="14"
+                             VerticalOptions="Center" CornerRadius="7"
+                             Color="{Binding StateColor}"/>
+                    <Label Grid.Column="1" VerticalTextAlignment="Center"
+                           Text="{Binding StateText}"
+                           FontAttributes="Bold" FontSize="18"/>
+                </Grid>
+            </Frame>
+
+            <!-- 핵심 카드 3개 -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="누적 횟수" FontAttributes="Bold" FontSize="13"/>
+                        <Label Text="{Binding Pin.CurrentCycles, StringFormat='{0:N0}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Grid.Column="1" Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="경고 임계치" FontAttributes="Bold" FontSize="13"/>
+                        <Label Text="{Binding Pin.WarnCycles, StringFormat='{0:N0}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Grid.Column="2" Padding="12" CornerRadius="16" HasShadow="True"
+                       BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="최대 수명" FontAttributes="Bold" FontSize="13"/>
+                        <Label Text="{Binding Pin.MaxCycles, StringFormat='{0:N0}'}" FontSize="22"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- 진행률 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                <VerticalStackLayout Spacing="6">
+                    <Grid ColumnDefinitions="*,Auto" >
+                        <Label Text="진행률" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Pin.UsageRatio, StringFormat='{0:P1}'}" />
+                    </Grid>
+                    <ProgressBar Progress="{Binding Pin.UsageRatio}" HeightRequest="8"/>
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                        <Label Text="{Binding Pin.Remaining, StringFormat='잔여 횟수: {0:N0}'}" />
+                        <Label Grid.Column="1" Text="최근 리셋:" />
+                        <Label Grid.Column="2" Text="{Binding Pin.LastResetAt, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 증가/리셋/시뮬레이션 -->
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="8">
+                <Button Text="+1"    Command="{Binding Increment1Command}" />
+                <Button Grid.Column="1" Text="+100"  Command="{Binding Increment100Command}" />
+                <Button Grid.Column="2" Text="+1000" Command="{Binding Increment1000Command}" />
+                <Button Grid.Column="3" Text="Reset" Command="{Binding ResetCommand}"
+                        BackgroundColor="#E74C3C" TextColor="White"/>
+                <Button Grid.Column="4" Text="{Binding IsSimulating, Converter={StaticResource BoolToText}, ConverterParameter='중지|시작'}"
+                        Command="{Binding ToggleSimulateCommand}" />
+            </Grid>
+
+            <!-- 경고 임계치 설정 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Entry x:Name="WarnEntry" Keyboard="Numeric"
+                           Placeholder="경고 임계치 입력 (예: 90000)"
+                           Text="{Binding Pin.WarnCycles, Mode=TwoWay}" />
+                    <Button Grid.Column="1" Text="적용"
+                            Command="{Binding ApplyWarnCyclesCommand}"
+                            CommandParameter="{Binding Source={x:Reference WarnEntry}, Path=Text}"/>
+                </Grid>
+            </Frame>
+
+            <!-- 이벤트 로그 -->
+            <Frame Padding="12" CornerRadius="16" HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="이벤트 로그" FontAttributes="Bold"/>
+                    <CollectionView ItemsSource="{Binding Events}" HeightRequest="160">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding}" FontSize="12"/>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
