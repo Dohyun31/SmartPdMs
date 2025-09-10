@@ -75,7 +75,7 @@
                 <!-- 1. 설비 반복 정밀도 감시 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="0" Grid.Column="0">
                     <VerticalStackLayout Spacing="6">
-                        <Image Source="robot_icon.png" WidthRequest="40" HeightRequest="40" />
+                        <Image Source="robot_icon.png" WidthRequest="100" HeightRequest="100"/>
                         <Label Text="설비 반복 정밀도 감시" Style="{StaticResource CardTitle}"/>
                         <Label Text="로봇 좌표/위치 정밀도 실시간 모니터링" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
@@ -87,6 +87,7 @@
                 <!-- 2. 체결 공정 건전성 관리 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="0" Grid.Column="1">
                     <VerticalStackLayout Spacing="6">
+                        <Image Source="screw_icon.png" WidthRequest="100" HeightRequest="100"/>
                         <Label Text="체결 공정 건전성 관리" Style="{StaticResource CardTitle}"/>
                         <Label Text="스크류 토크 패턴 분석/모니터링" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
@@ -98,6 +99,7 @@
                 <!-- 3. 소모품 관리 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="1" Grid.Column="0">
                     <VerticalStackLayout Spacing="6">
+                        <Image Source="probe_pin.png" WidthRequest="100" HeightRequest="100"/>
                         <Label Text="소모품 관리" Style="{StaticResource CardTitle}"/>
                         <Label Text="Probe Pin 사용량 추적 &amp; 교체 시기 예측" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
@@ -109,6 +111,7 @@
                 <!-- 4. 데이터 인프라 & 사용자 시스템 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="1" Grid.Column="1">
                     <VerticalStackLayout Spacing="6">
+                        <Image Source="data_icon.png" WidthRequest="100" HeightRequest="100"/>
                         <Label Text="데이터 사용자 시스템" Style="{StaticResource CardTitle}"/>
                         <Label Text="데이터 알림/통합 플랫폼" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"
