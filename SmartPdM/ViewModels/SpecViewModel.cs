@@ -11,7 +11,7 @@ public partial class SpecViewModel : ObservableObject
 
     [ObservableProperty] private InspectionSpec spec = new();
     [ObservableProperty] private bool isBusy;
-    [ObservableProperty] private bool isAdmin;   // 관리자 모드 토글
+    [ObservableProperty] private bool isAdmin = true;   // 관리자 모드 토글
     [ObservableProperty] private string? message;
 
     public SpecViewModel(ISpecStore store) => _store = store;

@@ -1,26 +1,29 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SmartPdM.Models;
+using SmartPdM.Services.Spec;   // ★ 스펙 저장소
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
 
 namespace SmartPdM.ViewModels;
 
-// CommunityToolkit.Mvvm 패키지 필요 (이미 설치됨)
 public partial class ConsumablesViewModel : ObservableObject
 {
+    private readonly ISpecStore _store;       // ★ 추가: 스펙 저장소
+    private IDispatcherTimer? _timer;
+    private bool _alarmLatched;
+
     [ObservableProperty] private bool isSimulating;
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private ProbePin pin;
 
-    private IDispatcherTimer? _timer;
-    private bool _alarmLatched; // 최초 경고 진입 시 한번만 울리게 제어(확장 포인트)
-
     public ObservableCollection<string> Events { get; } = new();
 
-    public ConsumablesViewModel()
+    // ★ DI로 ISpecStore 주입
+    public ConsumablesViewModel(ISpecStore store)
     {
-        // 초기값 (필요 시 여기서 WarnCycles/MaxCycles 바꿔도 됨)
+        _store = store;
+
+        // 기본값(스펙 로드 전 초기값)
         Pin = new ProbePin
         {
             Name = "Probe Pin",
@@ -29,13 +32,41 @@ public partial class ConsumablesViewModel : ObservableObject
             CurrentCycles = 0
         };
 
-        // 타이머 준비(Off)
+        // 타이머 준비
         _timer = Application.Current.Dispatcher.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(200);
-        _timer.Tick += (s, e) =>
+        _timer.Tick += (s, e) => Increment(25); // 0.2초마다 +25
+
+        // ★ 스펙 로드(비동기 시작)
+        _ = LoadSpecAsync();
+    }
+
+    // 페이지 진입 시 다시 스펙 동기화 하고 싶으면, 페이지 OnAppearing에서 호출
+    public async Task OnAppearingAsync() => await LoadSpecAsync();
+
+    // ★ 스펙 로드
+    [RelayCommand]
+    private async Task LoadSpecAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
         {
-            Increment(25); // 시뮬레이션: 0.2초마다 +25회
-        };
+            var spec = await _store.LoadAsync();
+            Pin.MaxCycles = spec.ProbePinMaxCycles;
+            Pin.WarnCycles = spec.ProbePinWarnCycles;
+
+            OnPropertyChanged(nameof(Pin));
+            OnPropertyChanged(nameof(StateColor));
+            OnPropertyChanged(nameof(StateText));
+
+            AddEvent($"스펙 로드: Max={Pin.MaxCycles:N0}, Warn={Pin.WarnCycles:N0}");
+        }
+        catch (Exception ex)
+        {
+            AddEvent("스펙 로드 실패: " + ex.Message);
+        }
+        finally { IsBusy = false; }
     }
 
     // --------- Commands ---------
@@ -63,20 +94,16 @@ public partial class ConsumablesViewModel : ObservableObject
     private void Reset()
     {
         Pin.Reset();
-        _alarmLatched = false; // 알람 해제
+        _alarmLatched = false;
         OnPropertyChanged(nameof(Pin));
         OnPropertyChanged(nameof(StateColor));
+        OnPropertyChanged(nameof(StateText));
         AddEvent("설비 초기화(Reset) 수행");
     }
 
-    [RelayCommand]
-    private void Increment1() => Increment(1);
-
-    [RelayCommand]
-    private void Increment100() => Increment(100);
-
-    [RelayCommand]
-    private void Increment1000() => Increment(1000);
+    [RelayCommand] private void Increment1() => Increment(1);
+    [RelayCommand] private void Increment100() => Increment(100);
+    [RelayCommand] private void Increment1000() => Increment(1000);
 
     [RelayCommand]
     private void ApplyWarnCycles(string? text)
@@ -86,6 +113,7 @@ public partial class ConsumablesViewModel : ObservableObject
             Pin.WarnCycles = v;
             OnPropertyChanged(nameof(Pin));
             OnPropertyChanged(nameof(StateColor));
+            OnPropertyChanged(nameof(StateText));
             AddEvent($"경고 임계치 변경: {v:N0}");
             CheckAlarm();
         }
@@ -100,6 +128,7 @@ public partial class ConsumablesViewModel : ObservableObject
         Pin.Increment(n);
         OnPropertyChanged(nameof(Pin));
         OnPropertyChanged(nameof(StateColor));
+        OnPropertyChanged(nameof(StateText));
         CheckAlarm();
     }
 
@@ -123,16 +152,14 @@ public partial class ConsumablesViewModel : ObservableObject
 
     private void CheckAlarm()
     {
-        // 상태 텍스트/색상 갱신 알림
         OnPropertyChanged(nameof(StateText));
         OnPropertyChanged(nameof(StateColor));
 
-        // 최초 경고 진입 시 이벤트 남김(벨/토스트 등 확장 포인트)
         if (Pin.IsWarning && !_alarmLatched)
         {
             _alarmLatched = true;
             AddEvent($"경고 임계치 초과! 현재 {Pin.CurrentCycles:N0} 회");
-            // TODO: 소리/진동/로컬 알림 등 연결 가능
+            // TODO: 소리/진동/로컬 알림 등
         }
 
         if (Pin.IsExceeded)
@@ -145,7 +172,6 @@ public partial class ConsumablesViewModel : ObservableObject
     {
         var line = $"[{DateTime.Now:HH:mm:ss}] {msg}";
         Events.Insert(0, line);
-        // 리스트가 너무 커지지 않도록
         if (Events.Count > 200) Events.RemoveAt(Events.Count - 1);
     }
 }

@@ -44,6 +44,10 @@ namespace SmartPdM
             builder.Services.AddSingleton<ApiClient>();
             builder.Services.AddSingleton<MainViewModel>();
 
+            builder.Services.AddSingleton<ISpecStore, PreferencesSpecStore>();
+            builder.Services.AddTransient<ConsumablesViewModel>();
+            builder.Services.AddTransient<SmartPdM.App.Views.ConsumablesPage>();
+
 
             // Views registration (if using DI for pages)
             // builder.Services.AddTransient<MainPage>();

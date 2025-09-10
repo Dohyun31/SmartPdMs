@@ -75,6 +75,7 @@
                 <!-- 1. 설비 반복 정밀도 감시 -->
                 <Frame Style="{StaticResource Card}" Grid.Row="0" Grid.Column="0">
                     <VerticalStackLayout Spacing="6">
+                        <Image Source="robot_icon.png" WidthRequest="40" HeightRequest="40" />
                         <Label Text="설비 반복 정밀도 감시" Style="{StaticResource CardTitle}"/>
                         <Label Text="로봇 좌표/위치 정밀도 실시간 모니터링" FontSize="13" TextColor="#888"/>
                         <Button Style="{StaticResource CardButton}"

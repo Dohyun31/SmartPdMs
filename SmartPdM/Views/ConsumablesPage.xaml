@@ -5,10 +5,6 @@
              x:Class="SmartPdM.App.Views.ConsumablesPage"
              Title="소모품 관리">
 
-    <ContentPage.BindingContext>
-        <vm:ConsumablesViewModel/>
-    </ContentPage.BindingContext>
-
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="14">
 
